@@ -38,7 +38,7 @@ function useProvideAuth() {
           window.location.href = '/login';
         }
       }
-    } else if (window.location.pathname === '/' || window.location.pathname.includes('/docs')) {
+    } else if (window.location.pathname === '/' || window.location.pathname.includes('/signUp')) {
       setUser(null);
     } else {
       if (window.location.pathname !== '/login') {

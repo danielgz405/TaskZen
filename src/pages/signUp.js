@@ -1,20 +1,23 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createUser } from '@services/api/users/users'
 import { useRouter } from 'next/router'
+import { useAuth } from '@hooks/useAuth'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function SingUp() {
+  const auth = useAuth()
+  const router = useRouter();
   const [form, setForm] = useState({
     name: '',
     email: '',
     password: '',
   })
-  const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
     createUser(form).then(() => {
         alert("Success!");
         router.push('/login')
@@ -23,6 +26,12 @@ export default function SingUp() {
         alert("Error!");
       });
   }
+
+  useEffect(() => {
+    if (auth.user?.name) {
+      router.push('/home')
+    }
+  }, [auth]);
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div
@@ -43,7 +52,7 @@ export default function SingUp() {
         ¡Descubre la magia de TaskZen! Simplifica tu vida con nuestra aplicación de gestión de tareas. Organiza, prioriza y alcanza tus metas con facilidad. ¡Inicia ahora y toma el control!
         </p>
       </div>
-      <form className="mx-auto mt-16 max-w-xl sm:mt-20">
+      <form className="mx-auto mt-16 max-w-xl sm:mt-20" onSubmit={(e) => handleSubmit(e)}>
         <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label htmlFor="name" className="block text-sm font-semibold leading-6 text-gray-900">
@@ -95,7 +104,6 @@ export default function SingUp() {
         <div className="mt-10">
           <button
             type="submit"
-            onClick={() => handleSubmit()}
             className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Registrarse

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from '@hooks/useAuth'
 
@@ -8,11 +8,11 @@ function classNames(...classes) {
 
 export default function Login() {
   const auth = useAuth()
+  const router = useRouter();
   const [form, setForm] = useState({
     email: '',
     password: '',
   })
-  const router = useRouter();
 
   const handleSubmit = () => {
     auth.login(form.email, form.password).then(() => {
@@ -23,6 +23,12 @@ export default function Login() {
         alert("Error!");
       });
   }
+
+  useEffect(() => {
+    if (auth.user?.name) {
+      router.push('/home')
+    }
+  }, [auth]);
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div
